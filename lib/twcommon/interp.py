@@ -187,6 +187,8 @@ interp_node_table = {
     '$theirs': lambda val: PlayerRef('ours', val),
     '$ourself': lambda val: PlayerRef('ourself', val),
     '$themself': lambda val: PlayerRef('ourself', val),
+    '$are': lambda val: PlayerRef('are', val),
+    '$is': lambda val: PlayerRef('are', val),
     '$We': lambda val: PlayerRef('We', val),
     '$They': lambda val: PlayerRef('We', val),
     '$Us': lambda val: PlayerRef('Us', val),
@@ -197,6 +199,8 @@ interp_node_table = {
     '$Theirs': lambda val: PlayerRef('Ours', val),
     '$Ourself': lambda val: PlayerRef('Ourself', val),
     '$Themself': lambda val: PlayerRef('Ourself', val),
+    '$Are': lambda val: PlayerRef('Are', val),
+    '$Is': lambda val: PlayerRef('Are', val),
     
     '$em': (Style, 'emph'),
     '$/em': (EndStyle, 'emph'),

@@ -42,6 +42,28 @@ pronoun_map_ourself = {
     'name': '', # suffix
     }
 pronoun_map_Ourself = { key:val.capitalize() for (key, val) in pronoun_map_ourself.items() }
+pronoun_map_are = {
+    'he': 'is',
+    'she': 'is',
+    'it': 'is',
+    'they': 'are',
+    'name': 'is', # not suffix
+    }
+pronoun_map_Are = { key:val.capitalize() for (key, val) in pronoun_map_are.items() }
+pronoun_map_s = { # not treated as suffixes internally; builder usage is e.g. "[$we] open[$s] the door"
+    'he': 's',
+    'she': 's',
+    'it': 's',
+    'they': '',
+    'name': 's',
+    }
+pronoun_map_es = { # not treated as suffixes internally; builder usage is e.g. "[$we] go[$es] through the door"
+    'he': 'es',
+    'she': 'es',
+    'it': 'es',
+    'they': '',
+    'name': 'es',
+    }
 
 pronoun_map_map = {
     'we': pronoun_map_we,
@@ -54,6 +76,10 @@ pronoun_map_map = {
     'Ours': pronoun_map_Ours,
     'ourself': pronoun_map_ourself,
     'Ourself': pronoun_map_Ourself,
+    'are': pronoun_map_are,
+    'Are': pronoun_map_Are,
+    's': pronoun_map_s,
+    'es': pronoun_map_es,
     }
 
 def resolve_pronoun(player, mapkey):
@@ -66,11 +92,11 @@ def resolve_pronoun(player, mapkey):
     if not player:
         player = { 'name': 'nobody', 'pronoun': 'it' }
     map = pronoun_map_map[mapkey]
-    if player['pronoun'] == 'name':
+    if player['pronoun'] == 'name' and not mapkey.lower() in ('are', 's', 'es'):
         # Add the suffix to the player's name
         return player['name'] + map['name']
     res = map.get(player['pronoun'], None)
-    if not res:
+    if not res and (mapkey not in ('s', 'es') or player['pronoun'] != 'they'):
         res = map.get('it')
     return res
 
@@ -87,6 +113,9 @@ class TestGrammarModule(unittest.TestCase):
         self.assertEqual('His', resolve_pronoun(player, 'Our'))
         self.assertEqual('His', resolve_pronoun(player, 'Ours'))
         self.assertEqual('Himself', resolve_pronoun(player, 'Ourself'))
+        self.assertEqual('Is', resolve_pronoun(player, 'Are'))
+        self.assertEqual('s', resolve_pronoun(player, 's'))
+        self.assertEqual('es', resolve_pronoun(player, 'es'))
 
         player = {'name':'Fred', 'pronoun':'she'}
         self.assertEqual('She', resolve_pronoun(player, 'We'))
@@ -95,6 +124,9 @@ class TestGrammarModule(unittest.TestCase):
         self.assertEqual('her', resolve_pronoun(player, 'our'))
         self.assertEqual('hers', resolve_pronoun(player, 'ours'))
         self.assertEqual('herself', resolve_pronoun(player, 'ourself'))
+        self.assertEqual('is', resolve_pronoun(player, 'are'))
+        self.assertEqual('s', resolve_pronoun(player, 's'))
+        self.assertEqual('es', resolve_pronoun(player, 'es'))
 
         player = {'name':'Fred', 'pronoun':'name'}
         self.assertEqual('Fred', resolve_pronoun(player, 'we'))
@@ -103,6 +135,9 @@ class TestGrammarModule(unittest.TestCase):
         self.assertEqual('Fred\'s', resolve_pronoun(player, 'Our'))
         self.assertEqual('Fred\'s', resolve_pronoun(player, 'Ours'))
         self.assertEqual('Fred', resolve_pronoun(player, 'Ourself'))
+        self.assertEqual('Is', resolve_pronoun(player, 'Are'))
+        self.assertEqual('s', resolve_pronoun(player, 's'))
+        self.assertEqual('es', resolve_pronoun(player, 'es'))
 
         player = {'name':'Fred', 'pronoun':'they'}
         self.assertEqual('They', resolve_pronoun(player, 'We'))
@@ -111,6 +146,9 @@ class TestGrammarModule(unittest.TestCase):
         self.assertEqual('their', resolve_pronoun(player, 'our'))
         self.assertEqual('theirs', resolve_pronoun(player, 'ours'))
         self.assertEqual('themself', resolve_pronoun(player, 'ourself'))
+        self.assertEqual('are', resolve_pronoun(player, 'are'))
+        self.assertEqual('', resolve_pronoun(player, 's'))
+        self.assertEqual('', resolve_pronoun(player, 'es'))
 
 
 if __name__ == '__main__':

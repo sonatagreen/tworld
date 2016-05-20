@@ -1095,6 +1095,22 @@ def define_globals():
     def pronoun_ourself(player=None):
         res = yield pronoun_resolve.yieldfunc('ourself', player)
         return res
+    @scriptfunc('Are', group='pronoun', yieldy=True)
+    def pronoun_Are(player=None):
+        res = yield pronoun_resolve.yieldfunc('Are', player)
+        return res
+    @scriptfunc('are', group='pronoun', yieldy=True)
+    def pronoun_are(player=None):
+        res = yield pronoun_resolve.yieldfunc('are', player)
+        return res
+    @scriptfunc('s', group='pronoun', yieldy=True)
+    def pronoun_s(player=None):
+        res = yield pronoun_resolve.yieldfunc('s', player)
+        return res
+    @scriptfunc('es', group='pronoun', yieldy=True)
+    def pronoun_es(player=None):
+        res = yield pronoun_resolve.yieldfunc('es', player)
+        return res
     @scriptfunc('They', group='pronoun', yieldy=True)
     def pronoun_They(player=None):
         res = yield pronoun_resolve.yieldfunc('We', player)
@@ -1134,6 +1150,14 @@ def define_globals():
     @scriptfunc('themself', group='pronoun', yieldy=True)
     def pronoun_themself(player=None):
         res = yield pronoun_resolve.yieldfunc('ourself', player)
+        return res
+    @scriptfunc('Is', group='pronoun', yieldy=True)
+    def pronoun_Is(player=None):
+        res = yield pronoun_resolve.yieldfunc('Is', player)
+        return res
+    @scriptfunc('is', group='pronoun', yieldy=True)
+    def pronoun_is(player=None):
+        res = yield pronoun_resolve.yieldfunc('is', player)
         return res
     
     @scriptfunc('realm', group='worlds', yieldy=True)
